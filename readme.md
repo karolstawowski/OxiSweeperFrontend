@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/github/license/karolstawowski/MinesweeperTS?color=3993fa)
 ![Version](https://img.shields.io/badge/version-0.0.1-3993fa) <br>
 
-### <a href="https://karolstawowski.github.io/MinesweeperTS/">Click here to see website!</a>
+### <a href="https://karolstawowski.github.io/MinesweeperTS/">Click here to see implementation of Minesweeper game only</a>
 
 ## Description
 
