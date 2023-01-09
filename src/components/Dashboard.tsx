@@ -40,18 +40,18 @@ export const Dashboard = (): JSX.Element => {
         {users && (
           <>
             <h2 className="my-1 text-lg text-center">Registered users list</h2>
-            <div className="min-w-[260px]">
-              <table className="w-full border-separate border-spacing-x-4 border-spacing-y-1">
-                <thead>
+            <div className="rounded-md min-w-[260px] max-h-[40vh] overflow-y-auto">
+              <table className="w-full">
+                <thead className="leading-8 bg-slate-700">
                   <tr>
                     <th>Id</th>
                     <th>User name</th>
                     <th>Role</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="[&>*:nth-child(odd)]: bg-slate-500 [&>*:nth-child(even)]:bg-slate-600">
                   {users.map((user) => (
-                    <tr key={user.id}>
+                    <tr className="leading-7" key={user.id}>
                       <td>{user.id}</td>
                       <td>{user.name}</td>
                       <td>{user.user_role.role_name}</td>
@@ -65,23 +65,21 @@ export const Dashboard = (): JSX.Element => {
         {scores && (
           <>
             <h2 className="my-1 mt-3 text-lg text-center">Scores list</h2>
-            <div className="min-w-[260px]">
-              <table className="w-full border-separate border-spacing-x-4 border-spacing-y-1">
-                <thead>
+            <div className="rounded-md min-w-[260px] max-h-[40vh] overflow-y-auto">
+              <table className="w-full">
+                <thead className="leading-8 bg-slate-700">
                   <tr>
-                    <th>Id</th>
                     <th>User name</th>
                     <th>Score</th>
                     <th>Difficulty level</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="[&>*:nth-child(odd)]: bg-slate-500 [&>*:nth-child(even)]:bg-slate-600">
                   {scores.map((score) => (
-                    <tr key={score.id}>
-                      <td>{score.id}</td>
+                    <tr className="leading-7" key={score.id}>
                       <td>{score.user_id.name}</td>
                       <td>{score.score}</td>
-                      <td>{score.difficulty_level}</td>
+                      <td>{diffuicultyLevelDict[score.difficulty_level]}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -92,4 +90,10 @@ export const Dashboard = (): JSX.Element => {
       </div>
     </>
   )
+}
+
+const diffuicultyLevelDict: { [key: number]: string } = {
+  1: 'Easy',
+  2: 'Intermediate',
+  3: 'Hard',
 }
