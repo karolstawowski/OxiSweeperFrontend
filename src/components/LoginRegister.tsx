@@ -15,7 +15,7 @@ export const LoginRegister = ({
     <div className="bg-orange-500 w-[600px] h-[400px] rounded-lg overflow-hidden flex items-center">
       <img src="./background.jpg" className="w-1/4 h-full mr-8" />
       <div>
-        <h2 className="mb-2 text-xl">Sign in to Minesweeper</h2>
+        <h2 className="mb-2 text-xl">{signText[type]} to Minesweeper</h2>
         <form onSubmit={onLoginRegister}>
           <label htmlFor="username">Username</label>
           <br />
@@ -27,7 +27,7 @@ export const LoginRegister = ({
           <br />
           <input
             type="submit"
-            value="Sign in"
+            value={signText[type]}
             className="px-4 py-2 mt-2 font-medium bg-blue-600 rounded-md cursor-pointer spacing hover:bg-blue-700"
           />
         </form>
@@ -55,3 +55,5 @@ const helpDescription = {
 const linkTo = { register: 'login', login: 'register' }
 
 const linkToDescription = { register: 'Log in.', login: 'Create an account.' }
+
+const signText = { register: 'Sign up', login: 'Sign in' }
