@@ -6,4 +6,5 @@ export enum ApiEndpoint {
   'Logout' = '/logout',
   'Score' = '/score',
   'Scores' = '/scores',
+  'ScoreTop' = '/score/top',
 }

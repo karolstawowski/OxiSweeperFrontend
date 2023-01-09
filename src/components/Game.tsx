@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { postData } from '../api/api-client'
+import { getDataSearch, postData } from '../api/api-client'
 import { Cell } from '../components/Cell'
 import { DifficultyLevelButton } from '../components/DifficultyLevelButton'
 import { ApiEndpoint } from '../enums/api-endpoints'
@@ -32,10 +32,7 @@ export const Game = (): JSX.Element => {
   >()
   const [gameDuration, setGameDuration] = useState<number>(0)
   const gameInterval = useRef<number>()
-  const [bestScore, setBestScore] = useLocalStorage<number>(
-    'minesweeperBestScore'.concat(gameDifficultyLevel.level.toString()),
-    -1
-  )
+  const [bestScore, setBestScore] = useState<number>(-1)
 
   useEffect(() => {
     if (gameStatus === GameStatus.GameWon) {
@@ -50,6 +47,18 @@ export const Game = (): JSX.Element => {
     }
   }, [gameStatus, bestScore, gameDuration])
 
+  useEffect(() => {
+    getDataSearch<{ score: number }>(
+      ApiEndpoint.ScoreTop,
+      [userToken, gameDifficultyLevel.level.toString()],
+      userToken
+    )
+      .then((data) => setBestScore(data.score ?? -1))
+      .catch((error: ResponseMessage) => {
+        console.error(error.response.data.message)
+      })
+  }, [gameDifficultyLevel.level])
+
   const changeDifficultyLevel = (
     difficultyLevel: DiffucultyLevelType
   ): void => {
@@ -62,17 +71,6 @@ export const Game = (): JSX.Element => {
 
     clearInterval(gameInterval.current)
     setGameDuration(0)
-    setBestScore(
-      localStorage.getItem(
-        'minesweeperBestScore'.concat(difficultyLevel.level.toString())
-      )
-        ? Number(
-            localStorage.getItem(
-              'minesweeperBestScore'.concat(difficultyLevel.level.toString())
-            )
-          )
-        : -1
-    )
   }
 
   const onCellLeftClick = (board: CellType[][], x: number, y: number): void => {

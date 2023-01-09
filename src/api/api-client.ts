@@ -54,3 +54,28 @@ export const postData = async <T>(
 
   return response.data
 }
+
+export const getDataSearch = async <T>(
+  endpoint: ApiEndpoint,
+  params: Array<string>,
+  userToken?: string
+): Promise<T> => {
+  const apiRoute = 'http://' + apiUrl + endpoint + '/' + params.join('/')
+  const response = await axios.get(
+    apiRoute,
+    userToken
+      ? {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + userToken,
+          },
+        }
+      : {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+  )
+
+  return response.data
+}
