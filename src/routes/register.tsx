@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import { useCookies } from 'react-cookie'
 import { postData } from '../api/api-client'
 import { LoginRegister } from '../components/LoginRegister'
 import { ApiEndpoint } from '../enums/api-endpoints'
 import { useAuth } from '../hooks/useAuth'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 import { ResponseMessage, UserRegisterResponse } from '../types/responseTypes'
 import { defaultRedirect } from '../utils/defaultRedirect'
 
 export const Register = (): JSX.Element => {
   const { user, setUser } = useAuth()
-  const [_, setUserToken] = useLocalStorage('token', '')
+  const [_, setCookie] = useCookies<'userToken', { [k: string]: string }>([
+    'userToken',
+  ])
   const [loginError, setLoginError] = useState<string>()
 
   const onRegister = async (e: React.SyntheticEvent): Promise<Response> => {
@@ -24,7 +26,7 @@ export const Register = (): JSX.Element => {
       password: target.password.value,
     })
       .then((data) => {
-        setUserToken(data.token)
+        setCookie('userToken', data.token, { maxAge: 60 })
         setUser({ role: data.role })
       })
       .catch((error: ResponseMessage) =>

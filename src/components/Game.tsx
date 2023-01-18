@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { useCookies } from 'react-cookie'
 import { getDataSearch, postData } from '../api/api-client'
 import { Cell } from '../components/Cell'
 import { DifficultyLevelButton } from '../components/DifficultyLevelButton'
 import { ApiEndpoint } from '../enums/api-endpoints'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 import { ResponseMessage } from '../types/responseTypes'
 import { difficultyLevels, DiffucultyLevelType } from '../utils/difficultyLevel'
 import {
@@ -17,7 +17,9 @@ import {
 } from '../utils/game'
 
 export const Game = (): JSX.Element => {
-  const [userToken] = useLocalStorage('token', '')
+  const [cookies] = useCookies<'userToken', { [k: string]: string }>([
+    'userToken',
+  ])
   const [gameDifficultyLevel, setGameDifficultyLevel] =
     useState<DiffucultyLevelType>(difficultyLevels[0])
   const [gameStatus, setGameStatus] = useState<GameStatus>(GameStatus.GameWorks)
@@ -41,7 +43,7 @@ export const Game = (): JSX.Element => {
 
       setBestScore(newBestScore)
       clearInterval(gameInterval.current)
-      setNewScore(gameDuration, gameDifficultyLevel.level, userToken)
+      setNewScore(gameDuration, gameDifficultyLevel.level, cookies.userToken)
     } else if (gameStatus === GameStatus.GameOver) {
       clearInterval(gameInterval.current)
     }
@@ -50,8 +52,8 @@ export const Game = (): JSX.Element => {
   useEffect(() => {
     getDataSearch<{ score: number }>(
       ApiEndpoint.ScoreTop,
-      [userToken, gameDifficultyLevel.level.toString()],
-      userToken
+      [cookies.userToken, gameDifficultyLevel.level.toString()],
+      cookies.userToken
     )
       .then((data) => setBestScore(data.score ?? -1))
       .catch((error: ResponseMessage) => {
@@ -81,7 +83,7 @@ export const Game = (): JSX.Element => {
       newCells = generateMines(cells, gameDifficultyLevel, { x, y })
       setCells(newCells)
 
-      gameInterval.current = setInterval(() => {
+      gameInterval.current = window.setInterval(() => {
         setGameDuration((gameDuration) => gameDuration + 1)
       }, 1000)
     }

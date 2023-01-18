@@ -1,22 +1,25 @@
+import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import { postData } from '../api/api-client'
 import { ApiEndpoint } from '../enums/api-endpoints'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 import { ResponseMessage, UserRegisterResponse } from '../types/responseTypes'
 
 export const LogoutButton = (): JSX.Element => {
-  const [userToken, setUserToken] = useLocalStorage('token', '')
+  const [cookies, _, removeCookie] = useCookies<
+    'userToken',
+    { [k: string]: string }
+  >(['userToken'])
   const navigate = useNavigate()
 
   const onLogout = async (e: React.SyntheticEvent): Promise<void> => {
     e.preventDefault()
 
-    setUserToken('')
+    removeCookie('userToken')
 
     await postData<UserRegisterResponse>(
       ApiEndpoint.Logout,
       undefined,
-      userToken
+      cookies.userToken
     ).catch((error: ResponseMessage) =>
       console.error(error.response.data.message)
     )

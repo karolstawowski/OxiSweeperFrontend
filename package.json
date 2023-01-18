@@ -15,12 +15,14 @@
     "@types/axios": "^0.14.0",
     "axios": "^1.2.1",
     "react": "^18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.1",
     "vite-plugin-eslint": "^1.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.24",
+    "@types/react-cookies": "^0.1.0",
     "@types/react-dom": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",

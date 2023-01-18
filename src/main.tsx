@@ -1,4 +1,5 @@
 import { StrictMode } from 'react'
+import { CookiesProvider } from 'react-cookie'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { App } from './App'
@@ -8,11 +9,13 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<App />} />
-        </Routes>
-      </BrowserRouter>
+      <CookiesProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/*" element={<App />} />
+          </Routes>
+        </BrowserRouter>
+      </CookiesProvider>
     </AuthProvider>
   </StrictMode>
 )

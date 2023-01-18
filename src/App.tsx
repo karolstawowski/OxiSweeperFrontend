@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useCookies } from 'react-cookie'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { postData } from './api/api-client'
 import { Layout } from './components/Layout'
@@ -6,7 +7,6 @@ import { RequireAuth } from './components/RequireAuth'
 import { ApiEndpoint } from './enums/api-endpoints'
 import { UserRole } from './enums/userRole'
 import { useAuth } from './hooks/useAuth'
-import { useLocalStorage } from './hooks/useLocalStorage'
 import { DashboardPage } from './routes/dashboard'
 import { GamePage } from './routes/game'
 import { Login } from './routes/login'
@@ -15,16 +15,18 @@ import { UserRoleResponse } from './types/responseTypes'
 
 export const App = (): JSX.Element => {
   const { user, setUser } = useAuth()
-  const [userToken] = useLocalStorage('token', '')
+  const [cookies] = useCookies<'userToken', { [k: string]: string }>([
+    'userToken',
+  ])
   const navigate = useNavigate()
 
   const getRole = async (): Promise<void> => {
     await postData<UserRoleResponse>(
       ApiEndpoint.Role,
       {
-        token: userToken,
+        token: cookies.userToken,
       },
-      userToken
+      cookies.userToken
     )
       .then((data) => {
         setUser({ role: data.role })
@@ -38,7 +40,7 @@ export const App = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (!userToken) {
+    if (!cookies.userToken) {
       navigate('/login')
     } else if (!user) {
       getRole()
@@ -46,7 +48,7 @@ export const App = (): JSX.Element => {
 
     if (user?.role === UserRole.User) navigate('/game')
     else if (user?.role === UserRole.Admin) navigate('/dashboard')
-  }, [user, userToken])
+  }, [user, cookies.userToken])
 
   return (
     <Routes>

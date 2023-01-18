@@ -1,6 +1,6 @@
+import { useCookies } from 'react-cookie'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 
 type RequireAuthProps = React.PropsWithChildren<{
   allowedRoles: Array<string>
@@ -11,11 +11,15 @@ export const RequireAuth = ({
 }: RequireAuthProps): JSX.Element => {
   const location = useLocation()
   const { user } = useAuth()
-  const [userToken] = useLocalStorage('token', '')
+  const [cookies] = useCookies<'userToken', { [k: string]: string }>([
+    'userToken',
+  ])
 
-  return user?.role && allowedRoles?.includes(user.role) && userToken ? (
+  return user?.role &&
+    allowedRoles?.includes(user.role) &&
+    cookies.userToken ? (
     <Outlet />
-  ) : userToken ? (
+  ) : cookies.userToken ? (
     <></>
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

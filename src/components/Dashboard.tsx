@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useCookies } from 'react-cookie'
 import { getData } from '../api/api-client'
 import { ApiEndpoint } from '../enums/api-endpoints'
 import { useAuth } from '../hooks/useAuth'
-import { useLocalStorage } from '../hooks/useLocalStorage'
 import {
   ResponseMessage,
   ScoresResponse,
@@ -11,19 +11,21 @@ import {
 
 export const Dashboard = (): JSX.Element => {
   const { user } = useAuth()
-  const [userToken] = useLocalStorage('token', '')
+  const [cookies] = useCookies<'userToken', { [k: string]: string }>([
+    'userToken',
+  ])
   const [users, setUsers] = useState<UsersResponse>()
   const [scores, setScores] = useState<ScoresResponse>()
   const [fetchError, setfetchError] = useState<string>()
 
   useEffect(() => {
-    getData<UsersResponse>(ApiEndpoint.Users, userToken)
+    getData<UsersResponse>(ApiEndpoint.Users, cookies.userToken)
       .then((data) => setUsers(data))
       .catch((error: ResponseMessage) =>
         setfetchError(error.response.data.message)
       )
 
-    getData<ScoresResponse>(ApiEndpoint.Scores, userToken)
+    getData<ScoresResponse>(ApiEndpoint.Scores, cookies.userToken)
       .then((data) => setScores(data))
       .catch((error: ResponseMessage) =>
         setfetchError(error.response.data.message)
